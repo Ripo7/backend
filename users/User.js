@@ -31,7 +31,7 @@ User.signup = (req, res, next) => {
 
   User.login = (req, res, next) => {
     // Check si email existe
-    db.query(`SELECT * FROM users WHERE email = '${req.body.pseudo}'`, function (err, res) {
+    db.query(`SELECT * FROM users WHERE pseudo = '${req.body.pseudo}'`, function (err, res) {
       console.log("err db", err);
       if (err) {
         next(err, null);
