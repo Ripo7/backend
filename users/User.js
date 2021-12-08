@@ -47,13 +47,13 @@ User.signup = (req, res, next) => {
             } else {
               // if valid return user and token
               next(null, {
-                userId: res.id,
+                userId: res[0].id,
                 token: jwt.sign(
-                  { userId: res.id },
+                  { userId: res[0].id },
                   'RANDOM_TOKEN_SECRET',
                   { expiresIn: '24h' }
                 )
-              });
+              })
             }
           })
           .catch( error => { next(error, null) } )
