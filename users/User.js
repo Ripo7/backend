@@ -50,6 +50,8 @@ User.signup = (req, res, next) => {
             }
           })
           .catch( error => { next(error, null) } )
+        } else {
+          next(err, null);
         }
       }
     });
