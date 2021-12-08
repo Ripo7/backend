@@ -7,21 +7,38 @@ var User = function (user) {
 }
 
 User.signup = (req, res, next) => {
+    console.log("req", req.body.password);
     bcrypt.hash(req.body.password, 10)
       .then(hash => {
+        console.log("hash", hash);
         const user = {
           email: req.body.email,
           password: hash
         };
-        db.query(`INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}')`, function (err, res) {
+        console.log("user", user);
+        console.log("query", `INSERT INTO users (email, password) VALUES ('${user.email}', ${user.password})`);
+        // db.query(`INSERT INTO users (email, password) VALUES (${user.email}, ${user.password})`)
+        //     .then(() => {
+        //         console.log("ici 1");
+        //         res.status(201).json({ message: 'Utilisateur créé !' })
+        //     })
+        //     .catch( error => {
+        //         console.log("ici 2");
+        //         res.status(400).json({ error: 'something failed 1' })
+        //     })
+        db.query(`INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}'')`, function (err, res) {
           if(err){
+            console.log('error', err);
             next(err, null);
           } else {
             next(null, res.insertId);
           }
         });
+        // user.save()
+        //   .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+        //   .catch(error => res.status(400).json({ error }));
       })
-      .catch(error => res.status(500).json({ error: 'something failed in brcypt' }));
+      .catch(error => res.status(500).json({ error: 'something failed 2' }));
   };
 
   User.login = (req, res, next) => {
@@ -42,26 +59,8 @@ User.signup = (req, res, next) => {
           })
           .catch( error => { next(error, null) } )
       }
-    })
-    // User.findOne({ email: req.body.email })
-    //   .then(user => {
-    //     if (!user) {
-    //       return res.status(401).json({ error: 'Utilisateur non trouvé !' });
-    //     }
-    //     bcrypt.compare(req.body.password, user.password)
-    //       .then(valid => {
-    //         if (!valid) {
-    //           return res.status(401).json({ error: 'Mot de passe incorrect !' });
-    //         }
-    //         res.status(200).json({
-    //           userId: user._id,
-    //           token: 'TOKEN'
-    //         });
-    //       })
-    //       .catch(error => res.status(500).json({ error }));
-    //   })
-    //   .catch(error => res.status(500).json({ error }));
-  };
+    });
+  }
 
 // User.createUser = function (pseudo, mdp, avatar, role, result) {
 //     db.query('INSERT INTO users set ?', { pseudo, mdp, avatar, role }, function (err, res) {
