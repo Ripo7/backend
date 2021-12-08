@@ -16,7 +16,7 @@ User.signup = (req, res, next) => {
           password: hash
         };
         console.log("user", user);
-        console.log("query", `INSERT INTO users (email, password) VALUES ('${user.email}', ${user.password})`);
+        console.log("query", `INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}')`);
         // db.query(`INSERT INTO users (email, password) VALUES (${user.email}, ${user.password})`)
         //     .then(() => {
         //         console.log("ici 1");
@@ -26,7 +26,7 @@ User.signup = (req, res, next) => {
         //         console.log("ici 2");
         //         res.status(400).json({ error: 'something failed 1' })
         //     })
-        db.query(`INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}'')`, function (err, res) {
+        db.query(`INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}')`, function (err, res) {
           if(err){
             console.log('error', err);
             next(err, null);
@@ -42,7 +42,7 @@ User.signup = (req, res, next) => {
   };
 
   User.login = (req, res, next) => {
-    db.query(`SELECT * FROM users WHERE email = ${req.body.email}`, function (err, user) {
+    db.query(`SELECT * FROM users WHERE email = '${req.body.email}'`, function (err, user) {
       if (err) {
         next(err, null);
       } else {
