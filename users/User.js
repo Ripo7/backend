@@ -36,7 +36,8 @@ User.signup = (req, res, next) => {
 ;      if (err) {
         next(err, null);
       } else {
-        bcrypt.compare(req.body.password, res[0].password)
+        if (res.length > 1) {
+          bcrypt.compare(req.body.password, res[0].password)
           .then( valid => {
             console.log("valid", valid);
             if (!valid) {
@@ -50,6 +51,7 @@ User.signup = (req, res, next) => {
             }
           })
           .catch( error => { next(error, null) } )
+        }
       }
     });
   }
