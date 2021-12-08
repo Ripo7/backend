@@ -30,6 +30,16 @@ var User = require('./User')
 //     });
 // }); 
 
+router.post('/login', function (req, res) {
+    User.login(req, res, function (err, user) {
+        if (err) {
+            return res.status(500).send({ error: 'Something failed' });
+        } else {
+            return res.json(user);
+        }
+    })
+});
+
 router.post('/create', function(req, res) {
     User.signup(req, res, function (err, insertId) {
         if (err) {
@@ -38,7 +48,7 @@ router.post('/create', function(req, res) {
             return res.json(insertId);
         }
     })
-})
+});
 
 // router.post('/', function(req, res) {
 //     var pseudo = req.body.pseudo;
