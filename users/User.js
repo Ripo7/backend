@@ -36,7 +36,7 @@ User.signup = (req, res, next) => {
 ;      if (err) {
         next(err, null);
       } else {
-        bcrypt.compare(req.body.password, res.rowDataPacket.password)
+        bcrypt.compare(req.body.password, res.RowDataPacket.password)
           .then( valid => {
             console.log("valid", valid);
             if (!valid) {
