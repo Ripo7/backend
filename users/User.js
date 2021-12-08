@@ -31,7 +31,8 @@ User.signup = (req, res, next) => {
 
   User.login = (req, res, next) => {
     db.query(`SELECT * FROM users WHERE email = '${req.body.email}'`, function (err, res) {
-      if (err) {
+      console.log("res db", res);
+;      if (err) {
         next(err, null);
       } else {
         bcrypt.compare(req.body.password, res.password)
