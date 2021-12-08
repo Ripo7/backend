@@ -36,7 +36,7 @@ User.signup = (req, res, next) => {
       if (err) {
         next(err, null);
       } else {
-        if (res.length > 1) {
+        if (res.length >= 1) {
           // Compare mdp krypté
           bcrypt.compare(req.body.password, res[0].password)
           .then( valid => {
