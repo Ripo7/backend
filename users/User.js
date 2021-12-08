@@ -32,6 +32,7 @@ User.signup = (req, res, next) => {
   User.login = (req, res, next) => {
     db.query(`SELECT * FROM users WHERE email = '${req.body.email}'`, function (err, res) {
       console.log("res db", res);
+      console.log("err db", err);
 ;      if (err) {
         next(err, null);
       } else {
