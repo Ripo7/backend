@@ -17,15 +17,6 @@ User.signup = (req, res, next) => {
         };
         console.log("user", user);
         console.log("query", `INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}')`);
-        // db.query(`INSERT INTO users (email, password) VALUES (${user.email}, ${user.password})`)
-        //     .then(() => {
-        //         console.log("ici 1");
-        //         res.status(201).json({ message: 'Utilisateur créé !' })
-        //     })
-        //     .catch( error => {
-        //         console.log("ici 2");
-        //         res.status(400).json({ error: 'something failed 1' })
-        //     })
         db.query(`INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}')`, function (err, res) {
           if(err){
             console.log('error', err);
@@ -34,25 +25,24 @@ User.signup = (req, res, next) => {
             next(null, res.insertId);
           }
         });
-        // user.save()
-        //   .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-        //   .catch(error => res.status(400).json({ error }));
       })
-      .catch(error => res.status(500).json({ error: 'something failed 2' }));
+      .catch(error => { next(error, null) });
   };
 
   User.login = (req, res, next) => {
-    db.query(`SELECT * FROM users WHERE email = '${req.body.email}'`, function (err, user) {
+    db.query(`SELECT * FROM users WHERE email = '${req.body.email}'`, function (err, res) {
       if (err) {
         next(err, null);
       } else {
         bcrypt.compare(req.body.password, user.password)
           .then( valid => {
+            console.log("valid", valid);
             if (!valid) {
               return next(err, null);
             } else {
+              console.log("res", res);
               next(null, {
-                userId: user.id,
+                userId: res.id,
                 token: 'TOKEN'
               })
             }
