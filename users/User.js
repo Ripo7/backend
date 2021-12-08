@@ -31,12 +31,12 @@ User.signup = (req, res, next) => {
 
   User.login = (req, res, next) => {
     db.query(`SELECT * FROM users WHERE email = '${req.body.email}'`, function (err, res) {
-      console.log("res db", res);
+      console.log("res db", res[0].password);
       console.log("err db", err);
 ;      if (err) {
         next(err, null);
       } else {
-        bcrypt.compare(req.body.password, res.password)
+        bcrypt.compare(req.body.password, res[0].password)
           .then( valid => {
             console.log("valid", valid);
             if (!valid) {
@@ -44,7 +44,7 @@ User.signup = (req, res, next) => {
             } else {
               console.log("res", res);
               next(null, {
-                userId: res.id,
+                userId: res[0].id,
                 token: 'TOKEN'
               })
             }
