@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 var User = function (user) {
-    this.email = user.email;
+    this.pseudo = user.pseudo;
     this.password = user.password;
 }
 
@@ -13,11 +13,11 @@ User.signup = (req, res, next) => {
       .then(hash => {
         // Création du user a stocké
         const user = {
-          email: req.body.email,
+          email: req.body.pseudo,
           password: hash
         };
         // Inserttion dans la base et retourne l'insert ID
-        db.query(`INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}')`, function (err, res) {
+        db.query(`INSERT INTO users (pseudo, password) VALUES ('${user.pseudo}', '${user.password}')`, function (err, res) {
           if(err){
             console.log('error', err);
             next(err, null);
@@ -31,7 +31,7 @@ User.signup = (req, res, next) => {
 
   User.login = (req, res, next) => {
     // Check si email existe
-    db.query(`SELECT * FROM users WHERE email = '${req.body.email}'`, function (err, res) {
+    db.query(`SELECT * FROM users WHERE email = '${req.body.pseudo}'`, function (err, res) {
       console.log("err db", err);
       if (err) {
         next(err, null);
