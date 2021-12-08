@@ -7,24 +7,38 @@ var User = function (user) {
 }
 
 User.signup = (req, res, next) => {
+    console.log("req", req.body.password);
     bcrypt.hash(req.body.password, 10)
       .then(hash => {
-        const user = new User({
+        console.log("hash", hash);
+        const user = {
           email: req.body.email,
           password: hash
+        };
+        console.log("user", user);
+        console.log("query", `INSERT INTO users (email, password) VALUES (${user.email}, ${user.password})`);
+        // db.query(`INSERT INTO users (email, password) VALUES (${user.email}, ${user.password})`)
+        //     .then(() => {
+        //         console.log("ici 1");
+        //         res.status(201).json({ message: 'Utilisateur créé !' })
+        //     })
+        //     .catch( error => {
+        //         console.log("ici 2");
+        //         res.status(400).json({ error: 'something failed 1' })
+        //     })
+        db.query(`INSERT INTO users (email, password) VALUES (${user.email}, ${user.password})`, function (err, res) {
+          if(err){
+            console.log('error', err);
+            next(err, null);
+          } else {
+            next(null, res.insertId);
+          }
         });
-        db.query('INSERT INTO users set ?', user)
-            .then(() => {
-                res.status(201).json({ message: 'Utilisateur créé !' })
-            })
-            .catch( error => {
-                res.status(400).json({ error })
-            })
         // user.save()
         //   .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
         //   .catch(error => res.status(400).json({ error }));
       })
-      .catch(error => res.status(500).json({ error }));
+      .catch(error => res.status(500).json({ error: 'something failed 2' }));
   };
 
 // User.createUser = function (pseudo, mdp, avatar, role, result) {
