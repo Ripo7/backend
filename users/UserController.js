@@ -31,11 +31,11 @@ var User = require('./User')
 // }); 
 
 router.post('/create', function(req, res) {
-    User.signup(req, res, function (err, user) {
+    User.signup(req, res, function (err, insertId) {
         if (err) {
             return res.status(500).send({ error: 'Something failed' });
         } else {
-            return res.json(user);
+            return res.json(insertId);
         }
     })
 })
