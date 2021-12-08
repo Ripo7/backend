@@ -1,5 +1,6 @@
 var db = require('../db');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 var User = function (user) {
     this.email = user.email;
@@ -7,16 +8,15 @@ var User = function (user) {
 }
 
 User.signup = (req, res, next) => {
-    console.log("req", req.body.password);
+   // Cryptage du MDP
     bcrypt.hash(req.body.password, 10)
       .then(hash => {
-        console.log("hash", hash);
+        // Création du user a stocké
         const user = {
           email: req.body.email,
           password: hash
         };
-        console.log("user", user);
-        console.log("query", `INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}')`);
+        // Inserttion dans la base et retourne l'insert ID
         db.query(`INSERT INTO users (email, password) VALUES ('${user.email}', '${user.password}')`, function (err, res) {
           if(err){
             console.log('error', err);
@@ -30,23 +30,30 @@ User.signup = (req, res, next) => {
   };
 
   User.login = (req, res, next) => {
+    // Check si email existe
     db.query(`SELECT * FROM users WHERE email = '${req.body.email}'`, function (err, res) {
       console.log("err db", err);
-;      if (err) {
+      if (err) {
         next(err, null);
       } else {
         if (res.length > 1) {
+          // Compare mdp krypté
           bcrypt.compare(req.body.password, res[0].password)
           .then( valid => {
             console.log("valid", valid);
             if (!valid) {
+              // If not valid error
               return next(err, null);
             } else {
-              console.log("res", res);
+              // if valid return user and token
               next(null, {
-                userId: res[0].id,
-                token: 'TOKEN'
-              })
+                userId: res.id,
+                token: jwt.sign(
+                  { userId: res.id },
+                  'RANDOM_TOKEN_SECRET',
+                  { expiresIn: '24h' }
+                )
+              });
             }
           })
           .catch( error => { next(error, null) } )

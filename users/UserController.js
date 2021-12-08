@@ -8,6 +8,7 @@ router.use(bodyParser.json());
 
 var User = require('./User')
 
+
 // router.get('/all', function (req, res){
 //     User.getAllUser(function (err, user) {
 //         if(err) {
