@@ -53,7 +53,7 @@ router.post('/create', function(req, res) {
     })
 });
 
-router.get('/:idUser', function(req, res) {
+router.get('/:idUser', auth, function(req, res) {
     User.getUser(req, res, function (err, user) {
         if (err) {
             return res.status(500).send({ error: 'Something failed' });
