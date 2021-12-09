@@ -53,6 +53,16 @@ router.post('/create', function(req, res) {
     })
 });
 
+router.get('/:idUser', function(req, res) {
+    User.getUser(req, res, function (err, user) {
+        if (err) {
+            return res.status(500).send({ error: 'Something failed' });
+        } else {
+            return res.json(user);
+        }
+    })
+});
+
 // router.post('/', function(req, res) {
 //     var pseudo = req.body.pseudo;
 //     var mdp = req.body.mdp;

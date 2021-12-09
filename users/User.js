@@ -65,6 +65,20 @@ User.signup = (req, res, next) => {
     });
   }
 
+  User.getUser = (req, res, next) => {
+    db.query(`SELECT pseudo FROM users WHERE users.id = '${req.params.userId}'`, function (err, res) {
+      if (err) {
+        next(err, null);
+      } else {
+        if (res.length >= 1) {
+          next(null, res);
+        } else {
+          next(err, null);
+        }
+      }
+    })
+  }
+
 // User.createUser = function (pseudo, mdp, avatar, role, result) {
 //     db.query('INSERT INTO users set ?', { pseudo, mdp, avatar, role }, function (err, res) {
 //         if(err){
