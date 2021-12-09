@@ -67,7 +67,7 @@ User.signup = (req, res, next) => {
 
   User.getUser = (req, res, next) => {
     console.log("req get user", req);
-    db.query(`SELECT pseudo FROM users WHERE users.id = '${req.params.idUser}'`, function (err, res) {
+    db.query(`SELECT pseudo, id FROM users WHERE users.id = '${req.params.idUser}'`, function (err, res) {
       if (err) {
         next(err, null);
       } else {
